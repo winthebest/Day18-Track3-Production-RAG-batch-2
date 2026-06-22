@@ -63,9 +63,8 @@ def main():
     print(f"\n⏱️  Total time: {elapsed:.1f}s")
     print("\n📋 Next steps:")
     print("  1. Điền analysis/failure_analysis.md")
-    print("  2. Điền analysis/group_report.md")
-    print("  3. Viết analysis/reflections/reflection_[Tên].md")
-    print("  4. Chạy: python check_lab.py")
+    print("  2. Viết analysis/reflection_[HọTên].md")
+    print("  3. Chạy: python check_lab.py")
 
 
 if __name__ == "__main__":

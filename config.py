@@ -3,10 +3,22 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+# override=True để giá trị trong .env thắng các biến môi trường OS cũ
+# (tránh trường hợp OPENAI_API_KEY cũ trong shell ghi đè key trong .env).
+load_dotenv(override=True)
 
-# --- API Keys ---
+# --- API Keys / LLM Gateway ---
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "") or None
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+
+# Đẩy ngược vào os.environ để các thư viện đọc env trực tiếp (openai SDK,
+# langchain/RAGAS) cũng dùng đúng gateway thay vì api.openai.com mặc định.
+if OPENAI_API_KEY:
+    os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
+if OPENAI_BASE_URL:
+    os.environ["OPENAI_BASE_URL"] = OPENAI_BASE_URL
+    os.environ["OPENAI_API_BASE"] = OPENAI_BASE_URL  # langchain-openai cũ dùng tên này
 
 # --- Qdrant ---
 QDRANT_HOST = "localhost"

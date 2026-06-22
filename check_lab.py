@@ -97,20 +97,22 @@ def validate():
 
     # 3. Analysis
     print("\n📝 Analysis:")
-    check_file("analysis/failure_analysis.md")
-    check_file("analysis/group_report.md")
+    if not check_file("analysis/failure_analysis.md"):
+        errors += 1
 
-    # 4. Individual reflections
-    print("\n👤 Individual reflections:")
+    # 4. Individual reflection (bài tập cá nhân)
+    print("\n👤 Reflection cá nhân:")
     reflections = []
-    ref_dir = "analysis/reflections"
-    if os.path.isdir(ref_dir):
-        reflections = [f for f in os.listdir(ref_dir) if f.startswith("reflection_") and f.endswith(".md")]
+    for d in ("analysis", "analysis/reflections"):
+        if os.path.isdir(d):
+            reflections += [os.path.join(d, f) for f in os.listdir(d)
+                            if f.startswith("reflection_") and f.endswith(".md")
+                            and f != "reflection_TEMPLATE.md"]
     if reflections:
         for r in reflections:
-            print(f"  ✅ {ref_dir}/{r}")
+            print(f"  ✅ {r}")
     else:
-        print(f"  ⚠️  Chưa có file reflection cá nhân trong {ref_dir}/")
+        print("  ⚠️  Chưa có file reflection cá nhân (analysis/reflection_[HọTên].md)")
 
     # 5. TODO count
     print("\n🔧 TODO markers:")

@@ -1,0 +1,89 @@
+============================================================
+PRODUCTION RAG PIPELINE
+============================================================
+
+[1/4] Chunking documents...
+Ignoring wrong pointing object 11 0 (offset 0)
+  ⚠️  Bỏ qua BCTC.pdf: PDF scan ảnh, không có text layer (cần OCR).
+  ⚠️  Bỏ qua Nghi_dinh_so_13-2023_ve_bao_ve_du_lieu_ca_nhan_508ee.pdf: PDF scan ảnh, không có text layer (cần OCR).
+  ✓ 100 chunks from 26 documents (0.2s)
+
+[2/4] Enriching 100 chunks (M5, 1 API call/chunk)...
+  Enriched 10/100 chunks...
+  ⚠️  Enrichment API failed: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}]
+  Enriched 20/100 chunks...
+  Enriched 30/100 chunks...
+  Enriched 40/100 chunks...
+  ⚠️  Enrichment API failed: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}]
+  Enriched 50/100 chunks...
+  ⚠️  Enrichment API failed: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}]
+  Enriched 60/100 chunks...
+  ⚠️  Enrichment API failed: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}]
+  ⚠️  OpenAI HyQA failed: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}]
+  ⚠️  Enrichment API failed: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}]
+  Enriched 70/100 chunks...
+  ⚠️  Enrichment API failed: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}]
+  Enriched 80/100 chunks...
+  ⚠️  Enrichment API failed: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}]
+  ⚠️  Enrichment API failed: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}]
+  ⚠️  Enrichment API failed: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}]
+  Enriched 90/100 chunks...
+  ⚠️  Enrichment API failed: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}]
+  ⚠️  Enrichment API failed: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}]
+  ⚠️  OpenAI HyQA failed: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}]
+  Enriched 100/100 chunks...
+  ✓ Enriched 100 chunks (904.5s) → cached
+
+[3/4] Indexing 100 chunks (BM25 + Dense)...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights: 100%|██████████| 391/391 [00:00<00:00, 21288.40it/s]
+Batches:   0%|          | 0/4 [00:00<?, ?it/s]Batches:  25%|██▌       | 1/4 [00:10<00:30, 10.14s/it]Batches:  50%|█████     | 2/4 [00:19<00:19,  9.59s/it]Batches:  75%|███████▌  | 3/4 [00:27<00:09,  9.11s/it]Batches: 100%|██████████| 4/4 [00:28<00:00,  5.67s/it]Batches: 100%|██████████| 4/4 [00:28<00:00,  7.07s/it]
+  ✓ Indexed (60.4s)
+
+[4/4] Loading reranker...
+  ✓ Reranker ready (0.0s)
+
+[Eval] Running 20 queries...
+Loading weights:   0%|          | 0/393 [00:00<?, ?it/s]Loading weights:  59%|█████▉    | 231/393 [00:00<00:00, 2306.91it/s]Loading weights: 100%|██████████| 393/393 [00:00<00:00, 3376.51it/s]
+  [1/20] Nhân viên được nghỉ bao nhiêu ngày khi kết hôn?...
+  [2/20] Bảo hiểm sức khỏe PVI có hạn mức bao nhiêu cho nhâ...
+  ⚠️  LLM generation failed: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}]
+  [3/20] Phụ cấp ăn trưa hàng tháng là bao nhiêu?...
+  [4/20] Nhân viên được nghỉ bao nhiêu ngày phép năm?...
+  [5/20] Thâm niên bao nhiêu năm thì được cộng thêm ngày ph...
+  [6/20] Mật khẩu phải có tối thiểu bao nhiêu ký tự?...
+  [7/20] Bao lâu phải đổi mật khẩu một lần?...
+  [8/20] Có cần kích hoạt xác thực đa yếu tố (MFA) không?...
+  [9/20] Nhân viên thử việc có được nghỉ phép năm không?...
+  [10/20] Khi phát hiện malware trên máy, nhân viên có nên t...
+  [11/20] Nhân viên thử việc có được hưởng bảo hiểm sức khỏe...
+  [12/20] Một nhân viên Senior có 9 năm thâm niên được nghỉ ...
+  [13/20] Nếu cần mua một chiếc laptop 30 triệu cho nhân viê...
+  [14/20] Nhân viên được tài trợ khóa học 25 triệu, nghỉ việ...
+  [15/20] Mentor và buddy của nhân viên mới có thể là cùng m...
+  [16/20] Muốn mua thiết bị trị giá 55 triệu cần ai phê duyệ...
+  [17/20] Nhân viên tạm ứng 15 triệu, sau 20 ngày mới thanh ...
+  [18/20] Lương thử việc của nhân viên Junior mức cao nhất l...
+  [19/20] Thông tin lương thuộc cấp độ phân loại dữ liệu nào...
+  [20/20] Nghỉ phép không lương 20 ngày cần ai phê duyệt?...
+
+[Eval] Running RAGAS (4 metrics × 20 questions)...
+D:\Lab\Day18-Track3-Production-RAG-batch-2\src\m4_eval.py:59: LangChainDeprecationWarning: The class `HuggingFaceEmbeddings` was deprecated in LangChain 0.2.2 and will be removed in 1.0. An updated version of the class exists in the langchain-huggingface package and should be used instead. To use it run `pip install -U langchain-huggingface` and import as `from langchain_huggingface import HuggingFaceEmbeddings`.
+  eval_embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 3671.65it/s]
+Evaluating:   0%|          | 0/80 [00:00<?, ?it/s]Evaluating:   1%|▏         | 1/80 [00:01<01:46,  1.35s/it]Evaluating:   2%|▎         | 2/80 [00:01<00:52,  1.49it/s]Evaluating:   8%|▊         | 6/80 [00:01<00:12,  5.77it/s]Evaluating:  11%|█▏        | 9/80 [00:02<00:14,  5.00it/s]Evaluating:  14%|█▍        | 11/80 [00:03<00:18,  3.83it/s]Evaluating:  16%|█▋        | 13/80 [00:03<00:17,  3.82it/s]Evaluating:  19%|█▉        | 15/80 [00:03<00:13,  4.74it/s]Evaluating:  21%|██▏       | 17/80 [00:04<00:12,  4.99it/s]Evaluating:  24%|██▍       | 19/80 [00:04<00:12,  5.04it/s]Evaluating:  28%|██▊       | 22/80 [00:04<00:07,  7.34it/s]Evaluating:  30%|███       | 24/80 [00:04<00:07,  7.94it/s]Evaluating:  34%|███▍      | 27/80 [00:05<00:07,  6.96it/s]Evaluating:  38%|███▊      | 30/80 [00:05<00:06,  8.04it/s]Evaluating:  40%|████      | 32/80 [00:06<00:06,  7.07it/s]Evaluating:  41%|████▏     | 33/80 [00:06<00:09,  4.76it/s]Evaluating:  42%|████▎     | 34/80 [00:06<00:08,  5.24it/s]Evaluating:  45%|████▌     | 36/80 [00:07<00:08,  4.97it/s]Evaluating:  46%|████▋     | 37/80 [00:07<00:07,  5.44it/s]Evaluating:  48%|████▊     | 38/80 [00:07<00:08,  5.05it/s]Evaluating:  50%|█████     | 40/80 [00:08<00:08,  4.81it/s]Evaluating:  54%|█████▍    | 43/80 [00:08<00:05,  7.32it/s]No statements were generated from the answer.
+Evaluating:  56%|█████▋    | 45/80 [00:08<00:04,  8.73it/s]Evaluating:  59%|█████▉    | 47/80 [00:09<00:06,  5.36it/s]Evaluating:  60%|██████    | 48/80 [00:09<00:05,  5.42it/s]Evaluating:  61%|██████▏   | 49/80 [00:09<00:06,  4.55it/s]Evaluating:  62%|██████▎   | 50/80 [00:09<00:06,  4.66it/s]Evaluating:  65%|██████▌   | 52/80 [00:09<00:04,  5.95it/s]Evaluating:  66%|██████▋   | 53/80 [00:10<00:04,  6.26it/s]Evaluating:  69%|██████▉   | 55/80 [00:10<00:03,  6.75it/s]Evaluating:  71%|███████▏  | 57/80 [00:11<00:05,  4.22it/s]Evaluating:  75%|███████▌  | 60/80 [00:11<00:03,  6.50it/s]Evaluating:  78%|███████▊  | 62/80 [00:11<00:03,  5.10it/s]Evaluating:  79%|███████▉  | 63/80 [00:12<00:03,  4.28it/s]Evaluating:  80%|████████  | 64/80 [00:12<00:03,  4.15it/s]Evaluating:  81%|████████▏ | 65/80 [00:13<00:04,  3.30it/s]Evaluating:  82%|████████▎ | 66/80 [00:15<00:09,  1.43it/s]Evaluating:  85%|████████▌ | 68/80 [00:16<00:09,  1.27it/s]Evaluating:  88%|████████▊ | 70/80 [00:19<00:09,  1.06it/s]Evaluating:  89%|████████▉ | 71/80 [00:19<00:07,  1.14it/s]Evaluating:  90%|█████████ | 72/80 [00:20<00:05,  1.36it/s]Evaluating:  91%|█████████▏| 73/80 [00:20<00:04,  1.66it/s]Evaluating:  95%|█████████▌| 76/80 [00:20<00:01,  2.88it/s]Evaluating:  96%|█████████▋| 77/80 [00:21<00:01,  2.62it/s]Evaluating:  98%|█████████▊| 78/80 [00:21<00:00,  2.42it/s]Evaluating:  99%|█████████▉| 79/80 [00:22<00:00,  1.99it/s]Evaluating: 100%|██████████| 80/80 [00:26<00:00,  1.44s/it]Evaluating: 100%|██████████| 80/80 [00:26<00:00,  3.00it/s]
+  ✓ RAGAS done (41.2s)
+
+============================================================
+PRODUCTION RAG SCORES
+============================================================
+  ✗ faithfulness: 0.7000
+  ✗ answer_relevancy: 0.4702
+  ✓ context_precision: 0.7750
+  ✓ context_recall: 0.7833
+Report saved to reports/ragas_report.json
+
+Total: 1239.2s
+EXIT:0

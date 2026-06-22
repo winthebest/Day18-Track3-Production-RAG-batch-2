@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-"""Production RAG Pipeline — Bài tập NHÓM: ghép M1+M2+M3+M4."""
+"""Production RAG Pipeline — Bài tập cá nhân: ghép M1+M2+M3+M4+M5."""
 
-import os, sys, time
+import os, sys, time, json
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -31,15 +31,32 @@ def build_pipeline():
             all_chunks.append({"text": child.text, "metadata": {**child.metadata, "parent_id": child.parent_id}})
     print(f"  ✓ {len(all_chunks)} chunks from {len(docs)} documents ({time.time()-t0:.1f}s)", flush=True)
 
-    # Step 2: Enrichment (M5)
+    # Step 2: Enrichment (M5) — cache ra đĩa vì đây là bước tốn thời gian/API nhất.
+    # Nếu đã có cache (và đủ số chunk) thì tái sử dụng, tránh chạy lại khi bước sau lỗi.
     t0 = time.time()
-    print(f"\n[2/4] Enriching {len(all_chunks)} chunks (M5, 1 API call/chunk)...", flush=True)
-    enriched = enrich_chunks(all_chunks)
-    if enriched:
-        all_chunks = [{"text": e.enriched_text, "metadata": e.auto_metadata} for e in enriched]
-        print(f"  ✓ Enriched {len(enriched)} chunks ({time.time()-t0:.1f}s)", flush=True)
+    cache_path = "reports/enriched_chunks.json"
+    cached = None
+    if os.path.exists(cache_path):
+        try:
+            with open(cache_path, encoding="utf-8") as f:
+                cached = json.load(f)
+        except Exception:
+            cached = None
+
+    if cached and len(cached) == len(all_chunks):
+        all_chunks = cached
+        print(f"\n[2/4] Reusing cached enrichment ({len(all_chunks)} chunks from {cache_path})", flush=True)
     else:
-        print("  ⚠️  M5 not implemented — using raw chunks", flush=True)
+        print(f"\n[2/4] Enriching {len(all_chunks)} chunks (M5, 1 API call/chunk)...", flush=True)
+        enriched = enrich_chunks(all_chunks)
+        if enriched:
+            all_chunks = [{"text": e.enriched_text, "metadata": e.auto_metadata} for e in enriched]
+            os.makedirs("reports", exist_ok=True)
+            with open(cache_path, "w", encoding="utf-8") as f:
+                json.dump(all_chunks, f, ensure_ascii=False)
+            print(f"  ✓ Enriched {len(enriched)} chunks ({time.time()-t0:.1f}s) → cached", flush=True)
+        else:
+            print("  ⚠️  M5 not implemented — using raw chunks", flush=True)
 
     # Step 3: Index (M2)
     t0 = time.time()
@@ -64,13 +81,13 @@ def run_query(query: str, search: HybridSearch, reranker: CrossEncoderReranker) 
     reranked = reranker.rerank(query, docs, top_k=RERANK_TOP_K)
     contexts = [r.text for r in reranked] if reranked else [r.text for r in results[:3]]
 
-    from config import OPENAI_API_KEY
+    from config import OPENAI_API_KEY, OPENAI_BASE_URL, OPENAI_MODEL
     if OPENAI_API_KEY and contexts:
         try:
             from openai import OpenAI
-            client = OpenAI()
+            client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_BASE_URL)
             context_str = "\n\n".join(contexts)
-            resp = client.chat.completions.create(model="gpt-4o-mini", messages=[
+            resp = client.chat.completions.create(model=OPENAI_MODEL, messages=[
                 {"role": "system", "content": "Trả lời CHỈ dựa trên context. Nếu không có → nói 'Không tìm thấy.'"},
                 {"role": "user", "content": f"Context:\n{context_str}\n\nCâu hỏi: {query}"},
             ])
@@ -110,7 +127,8 @@ def evaluate_pipeline(search: HybridSearch, reranker: CrossEncoderReranker):
         print(f"  {'✓' if s >= 0.75 else '✗'} {m}: {s:.4f}")
 
     failures = failure_analysis(results.get("per_question", []))
-    save_report(results, failures)
+    os.makedirs("reports", exist_ok=True)
+    save_report(results, failures, path="reports/ragas_report.json")
     return results
 
 
